@@ -1,0 +1,114 @@
+local MilknessLibrary = {}
+MilknessLibrary.__index = MilknessLibrary
+
+function MilknessLibrary.new(title)
+	local self = setmetatable({}, MilknessLibrary)
+	self.Title = title
+	self.Buttons = {}
+	self.CurrentPage = nil
+	self.GUI = self:CreateGUI()
+	return self
+end
+
+function MilknessLibrary:CreateGUI()
+	local MilknessLibrary = Instance.new("ScreenGui")
+	MilknessLibrary.Name = "MilknessLibrary"
+	MilknessLibrary.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	local GUI = Instance.new("Frame")
+	GUI.Name = "GUI"
+	GUI.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	GUI.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	GUI.Size = UDim2.new(0, 486, 0, 296)
+	GUI.Active = true
+	GUI.Draggable = true
+
+	function MilknessLibrary:CreateGUI()
+		local MilknessLibrary = Instance.new("ScreenGui")
+		MilknessLibrary.Name = "MilknessLibrary"
+		MilknessLibrary.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+		local GUI = Instance.new("Frame")
+		GUI.Name = "GUI"
+		GUI.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		GUI.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		GUI.Size = UDim2.new(0, 486, 0, 296)
+		GUI.Active = true
+		GUI.Draggable = true
+
+		local Title = Instance.new("TextLabel")
+		Title.Name = "Title"
+		Title.Parent = GUI
+		Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Title.Size = UDim2.new(1, 0, 0, 30)
+		Title.Font = Enum.Font.SourceSansBold
+		Title.Text = self.Title
+		Title.TextColor3 = Color3.fromRGB(0, 0, 0)
+		Title.TextSize = 20
+
+		local ButtonContainer = Instance.new("Frame")
+		ButtonContainer.Name = "ButtonContainer"
+		ButtonContainer.Parent = GUI
+		ButtonContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		ButtonContainer.Position = UDim2.new(0, 0, 0, 30)
+		ButtonContainer.Size = UDim2.new(1, 0, 1, -30)
+		ButtonContainer.BorderSizePixel = 0
+		ButtonContainer.ClipsDescendants = true
+		ButtonContainer.ScrollBarThickness = 5
+
+		local ButtonLayout = Instance.new("UIListLayout")
+		ButtonLayout.Name = "ButtonLayout"
+		ButtonLayout.Parent = ButtonContainer
+		ButtonLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		for i, buttonData in ipairs(self.Buttons) do
+			local Button = Instance.new("TextButton")
+			Button.Name = "Button"..i
+			Button.Parent = ButtonContainer
+			Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Button.Size = UDim2.new(1, -10, 0, 30)
+			Button.Position = UDim2.new(0, 5, 0, 35 * (i - 1))
+			Button.BorderSizePixel = 0
+			Button.Font = Enum.Font.SourceSans
+			Button.Text = buttonData.Text
+			Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Button.TextSize = 14
+			Button.AutoButtonColor = false
+
+			Button.MouseButton1Click:Connect(function()
+				buttonData.Callback()
+			end)
+		end
+
+		GUI.Parent = MilknessLibrary
+		MilknessLibrary.Parent = game.CoreGui
+		return MilknessLibrary
+	end
+
+	GUI.Parent = MilknessLibrary
+	MilknessLibrary.Parent = game.CoreGui
+	return MilknessLibrary
+end
+
+function MilknessLibrary:AddButton(text, callback)
+	table.insert(self.Buttons, {Text = text, Callback = callback})
+end
+
+function MilknessLibrary:AddPage(title)
+	local page = {
+		Title = title,
+		Buttons = {},
+	}
+	self.CurrentPage = page
+	return page
+end
+
+function MilknessLibrary:Open()
+	self.GUI.Enabled = true
+end
+
+function MilknessLibrary:Close()
+	self.GUI.Enabled = false
+end
+
+return MilknessLibrary
